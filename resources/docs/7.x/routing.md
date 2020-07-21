@@ -1,8 +1,8 @@
 # Routing
 
-- [Basic Routing](#basic-routing)
-    - [Redirect Routes](#redirect-routes)
-    - [View Routes](#view-routes)
+- [基本路由](#basic-routing)
+    - [路由重導向](#redirect-routes)
+    - [視圖路由](#view-routes)
 - [Route Parameters](#route-parameters)
     - [Required Parameters](#required-parameters)
     - [Optional Parameters](#parameters-optional-parameters)
@@ -24,27 +24,26 @@
 - [Cross-Origin Resource Sharing (CORS)](#cors)
 
 <a name="basic-routing"></a>
-## Basic Routing
+## 基本路由
 
-The most basic Laravel routes accept a URI and a `Closure`, providing a very simple and expressive method of defining routes:
+最基本的 Laravel 路由會接收一個 URI 和一個 `Closure`, 提供非常簡單的路由表達方式：
 
     Route::get('foo', function () {
         return 'Hello World';
     });
 
-#### The Default Route Files
+#### 預設路由檔案
 
-All Laravel routes are defined in your route files, which are located in the `routes` directory. These files are automatically loaded by the framework. The `routes/web.php` file defines routes that are for your web interface. These routes are assigned the `web` middleware group, which provides features like session state and CSRF protection. The routes in `routes/api.php` are stateless and are assigned the `api` middleware group.
+所有Laravel的路由都透過您 `route` 資料夾中的檔案來定義的。這些檔案會由框架自動載入。 `routes/web.php` 定義了您網路介面的路由。這些路由會被分配至 `web` 中介層組，讓它提供像是 session 狀態和 CSRF 保護的功能。在 `routes/api.php` 裡面的路由則是是無狀態的並且被分配至 `api` 中介層組。
 
-For most applications, you will begin by defining routes in your `routes/web.php` file. The routes defined in `routes/web.php` may be accessed by entering the defined route's URL in your browser. For example, you may access the following route by navigating to `http://your-app.test/user` in your browser:
+在大部分情況下，您會從您的 `routes/web.php` 開始設置路由。在 `routes/web.php` 中被定義的路由可能會透過輸入您所設置的路由網址來訪問。舉例來說，你可以透過瀏覽 `http://your-app.test/user` 取得下面所指定的路由設定：
 
     Route::get('/user', 'UserController@index');
 
-Routes defined in the `routes/api.php` file are nested within a route group by the `RouteServiceProvider`. Within this group, the `/api` URI prefix is automatically applied so you do not need to manually apply it to every route in the file. You may modify the prefix and other route group options by modifying your `RouteServiceProvider` class.
+被定義在 `routes/api.php` 中的路由會在一個路由群組中透過 `RouteServiceProvider` 變成巢狀結構。在這個群組裡面， `/api` URI前綴會被自動套用好，您不需要再手動幫每個路由加上它。你也可以透過修改 `RouteServiceProvider` 類別來調整前綴和其他路由群組選項。
 
-#### Available Router Methods
-
-The router allows you to register routes that respond to any HTTP verb:
+#### 可用的路由器選項
+路由器可以讓您登記任何路由來回應任何 HTTP 動作 (HTTP verb)：
 
     Route::get($uri, $callback);
     Route::post($uri, $callback);
@@ -53,7 +52,7 @@ The router allows you to register routes that respond to any HTTP verb:
     Route::delete($uri, $callback);
     Route::options($uri, $callback);
 
-Sometimes you may need to register a route that responds to multiple HTTP verbs. You may do so using the `match` method. Or, you may even register a route that responds to all HTTP verbs using the `any` method:
+有時候您需要登記一個路由讓他回應多種 HTTP 動作。您可能需要使用 `match` 方法。或是您也可以使用 `any` 來回應所有的 HTTP 動作：
 
     Route::match(['get', 'post'], '/', function () {
         //
@@ -63,9 +62,9 @@ Sometimes you may need to register a route that responds to multiple HTTP verbs.
         //
     });
 
-#### CSRF Protection
+#### CSRF 保護
 
-Any HTML forms pointing to `POST`, `PUT`, `PATCH`, or `DELETE` routes that are defined in the `web` routes file should include a CSRF token field. Otherwise, the request will be rejected. You can read more about CSRF protection in the [CSRF documentation](/docs/{{version}}/csrf):
+任何使用 `POST`、`PUT`、`PATCH` 或 `DELETE` 的 HTML 表單，在 `web` 路由設定中都會被要求要有 CSRF token field。不然將會拒絕請求。有關 CSRF 保護的功能你可以閱讀 [CSRF 文件資料](/docs/{{version}}/csrf)：
 
     <form method="POST" action="/profile">
         @csrf
@@ -73,24 +72,24 @@ Any HTML forms pointing to `POST`, `PUT`, `PATCH`, or `DELETE` routes that are d
     </form>
 
 <a name="redirect-routes"></a>
-### Redirect Routes
+### 路由重導向
 
-If you are defining a route that redirects to another URI, you may use the `Route::redirect` method. This method provides a convenient shortcut so that you do not have to define a full route or controller for performing a simple redirect:
+如果您正在定義一個會導向其他的 URI 的路由，您可以使用 `Route::redirect` 方法。這個方法提供了簡單的捷徑讓你不用定義一整個新的路由或是控制器：
 
     Route::redirect('/here', '/there');
 
-By default, `Route::redirect` returns a `302` status code. You may customize the status code using the optional third parameter:
+預設情況下 `Route::redirect` 會回傳一個 `302` 狀態碼。你可以透過第三個參數定義它：
 
     Route::redirect('/here', '/there', 301);
 
-You may use the `Route::permanentRedirect` method to return a `301` status code:
+你也可以用 `Route::permanentRedirect` 方法回傳一個 `301` 狀態碼：
 
     Route::permanentRedirect('/here', '/there');
 
 <a name="view-routes"></a>
-### View Routes
+### 視圖路由
 
-If your route only needs to return a view, you may use the `Route::view` method. Like the `redirect` method, this method provides a simple shortcut so that you do not have to define a full route or controller. The `view` method accepts a URI as its first argument and a view name as its second argument. In addition, you may provide an array of data to pass to the view as an optional third argument:
+如果你的路由只需要回傳一個視圖(View)，你可以使用 `Route::view` 方法。就像 `redirect`，這個方法提供了簡單的捷徑讓你不用定義一整個新的路由或是控制器。`view` 接受一個 URI 作為第一個參數 和一個View Name 做為第二個參數。另外，你也可以用陣列傳送資料給視圖：
 
     Route::view('/welcome', 'welcome');
 
