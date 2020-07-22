@@ -1,12 +1,12 @@
-# Routing
+# 路由
 
 - [基本路由](#basic-routing)
     - [路由重導向](#redirect-routes)
     - [視圖路由](#view-routes)
-- [Route Parameters](#route-parameters)
-    - [Required Parameters](#required-parameters)
-    - [Optional Parameters](#parameters-optional-parameters)
-    - [Regular Expression Constraints](#parameters-regular-expression-constraints)
+- [路由參數](#route-parameters)
+    - [必要參數](#required-parameters)
+    - [選擇性參數](#parameters-optional-parameters)
+    - [正規表達式限制](#parameters-regular-expression-constraints)
 - [Named Routes](#named-routes)
 - [Route Groups](#route-groups)
     - [Middleware](#route-group-middleware)
@@ -36,11 +36,11 @@
 
 所有Laravel的路由都透過您 `route` 資料夾中的檔案來定義的。這些檔案會由框架自動載入。 `routes/web.php` 定義了您網路介面的路由。這些路由會被分配至 `web` 中介層組，讓它提供像是 session 狀態和 CSRF 保護的功能。在 `routes/api.php` 裡面的路由則是是無狀態的並且被分配至 `api` 中介層組。
 
-在大部分情況下，您會從您的 `routes/web.php` 開始設置路由。在 `routes/web.php` 中被定義的路由可能會透過輸入您所設置的路由網址來訪問。舉例來說，你可以透過瀏覽 `http://your-app.test/user` 取得下面所指定的路由設定：
+在大部分情況下，您會從您的 `routes/web.php` 開始設置路由。在 `routes/web.php` 中被定義的路由可能會透過輸入您所設置的路由網址來訪問。舉例來說，您可以透過瀏覽 `http://your-app.test/user` 取得下面所指定的路由設定：
 
     Route::get('/user', 'UserController@index');
 
-被定義在 `routes/api.php` 中的路由會在一個路由群組中透過 `RouteServiceProvider` 變成巢狀結構。在這個群組裡面， `/api` URI前綴會被自動套用好，您不需要再手動幫每個路由加上它。你也可以透過修改 `RouteServiceProvider` 類別來調整前綴和其他路由群組選項。
+被定義在 `routes/api.php` 中的路由會在一個路由群組中透過 `RouteServiceProvider` 變成巢狀結構。在這個群組裡面， `/api` URI前綴會被自動套用好，您不需要再手動幫每個路由加上它。您也可以透過修改 `RouteServiceProvider` 類別來調整前綴和其他路由群組選項。
 
 #### 可用的路由器選項
 路由器可以讓您登記任何路由來回應任何 HTTP 動作 (HTTP verb)：
@@ -64,7 +64,7 @@
 
 #### CSRF 保護
 
-任何使用 `POST`、`PUT`、`PATCH` 或 `DELETE` 的 HTML 表單，在 `web` 路由設定中都會被要求要有 CSRF token field。不然將會拒絕請求。有關 CSRF 保護的功能你可以閱讀 [CSRF 文件資料](/docs/{{version}}/csrf)：
+任何使用 `POST`、`PUT`、`PATCH` 或 `DELETE` 的 HTML 表單，在 `web` 路由設定中都會被要求要有 CSRF token field。不然將會拒絕請求。有關 CSRF 保護的功能您可以閱讀 [CSRF 文件資料](/docs/{{version}}/csrf)：
 
     <form method="POST" action="/profile">
         @csrf
@@ -74,51 +74,51 @@
 <a name="redirect-routes"></a>
 ### 路由重導向
 
-如果您正在定義一個會導向其他的 URI 的路由，您可以使用 `Route::redirect` 方法。這個方法提供了簡單的捷徑讓你不用定義一整個新的路由或是控制器：
+如果您正在定義一個會導向其他的 URI 的路由，您可以使用 `Route::redirect` 方法。這個方法提供了簡單的捷徑讓您不用定義一整個新的路由或是控制器：
 
     Route::redirect('/here', '/there');
 
-預設情況下 `Route::redirect` 會回傳一個 `302` 狀態碼。你可以透過第三個參數定義它：
+預設情況下 `Route::redirect` 會回傳一個 `302` 狀態碼。您可以透過第三個參數定義它：
 
     Route::redirect('/here', '/there', 301);
 
-你也可以用 `Route::permanentRedirect` 方法回傳一個 `301` 狀態碼：
+您也可以用 `Route::permanentRedirect` 方法回傳一個 `301` 狀態碼：
 
     Route::permanentRedirect('/here', '/there');
 
 <a name="view-routes"></a>
 ### 視圖路由
 
-如果你的路由只需要回傳一個視圖(View)，你可以使用 `Route::view` 方法。就像 `redirect`，這個方法提供了簡單的捷徑讓你不用定義一整個新的路由或是控制器。`view` 接受一個 URI 作為第一個參數 和一個View Name 做為第二個參數。另外，你也可以用陣列傳送資料給視圖：
+如果您的路由只需要回傳一個視圖(View)，您可以使用 `Route::view` 方法。就像 `redirect`，這個方法提供了簡單的捷徑讓您不用定義一整個新的路由或是控制器。`view` 接受一個 URI 作為第一個參數 和一個View Name 做為第二個參數。另外，您也可以用陣列傳送資料給視圖：
 
     Route::view('/welcome', 'welcome');
 
     Route::view('/welcome', 'welcome', ['name' => 'Taylor']);
 
 <a name="route-parameters"></a>
-## Route Parameters
+## 路由參數
 
 <a name="required-parameters"></a>
-### Required Parameters
+### 必要參數
 
-Sometimes you will need to capture segments of the URI within your route. For example, you may need to capture a user's ID from the URL. You may do so by defining route parameters:
+有時候您會需要取得 URI 上面的參數提供給路由使用。舉例來說，您需要透過 URL 取得使用者的 ID。您可以透過下面的方法定義：
 
     Route::get('user/{id}', function ($id) {
         return 'User '.$id;
     });
 
-You may define as many route parameters as required by your route:
+您可以依照需求定義多個參數來使用：
 
     Route::get('posts/{post}/comments/{comment}', function ($postId, $commentId) {
         //
     });
 
-Route parameters are always encased within `{}` braces and should consist of alphabetic characters, and may not contain a `-` character. Instead of using the `-` character, use an underscore (`_`). Route parameters are injected into route callbacks / controllers based on their order - the names of the callback / controller arguments do not matter.
+路由參數都會包裝在一組 `{}` 內並且只由英文字母組成，裡面不能包含 `-` 字元，如果有需要請改用下劃線 `_` 替代。路由的參數會依據順序傳回路由或控制器，回傳和控制器的引數 (argument) 並不會影響。
 
 <a name="parameters-optional-parameters"></a>
-### Optional Parameters
+### 選擇性參數
 
-Occasionally you may need to specify a route parameter, but make the presence of that route parameter optional. You may do so by placing a `?` mark after the parameter name. Make sure to give the route's corresponding variable a default value:
+偶爾您會需要定義一個路由參數，但是不要求這個參數一定存在。您可以透過在參數名稱後面加上一個 `?` 字元來做這件事。請確定您給路由一組對應預設數值避免問題：
 
     Route::get('user/{name?}', function ($name = null) {
         return $name;
@@ -129,9 +129,9 @@ Occasionally you may need to specify a route parameter, but make the presence of
     });
 
 <a name="parameters-regular-expression-constraints"></a>
-### Regular Expression Constraints
+### 正規表達式限制
 
-You may constrain the format of your route parameters using the `where` method on a route instance. The `where` method accepts the name of the parameter and a regular expression defining how the parameter should be constrained:
+您可以透過 `where` 方法來限制路由參數的格式。`where` 透過一組正規表達式限制參數的格式：
 
     Route::get('user/{name}', function ($name) {
         //
@@ -146,9 +146,9 @@ You may constrain the format of your route parameters using the `where` method o
     })->where(['id' => '[0-9]+', 'name' => '[a-z]+']);
 
 <a name="parameters-global-constraints"></a>
-#### Global Constraints
+#### 全域限制
 
-If you would like a route parameter to always be constrained by a given regular expression, you may use the `pattern` method. You should define these patterns in the `boot` method of your `RouteServiceProvider`:
+如果您希望一個路由的所有特定參數都被一組正規表達式限制，您可以使用 `pattern` 方法。您應該在 `RouteServiceProvider` 中的 `boot` 方法裡面定義：
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -162,22 +162,22 @@ If you would like a route parameter to always be constrained by a given regular 
         parent::boot();
     }
 
-Once the pattern has been defined, it is automatically applied to all routes using that parameter name:
+當 pattern 被定義後，它會自動套用到所有使用到對應參數名稱的參數上：
 
     Route::get('user/{id}', function ($id) {
         // Only executed if {id} is numeric...
     });
 
 <a name="parameters-encoded-forward-slashes"></a>
-#### Encoded Forward Slashes
+#### 編碼正斜線 (Encoded Forward Slashes)
 
-The Laravel routing component allows all characters except `/`. You must explicitly allow `/` to be part of your placeholder using a `where` condition regular expression:
+Laravel 的路由組件接受除了 `/` 以外的所有字元。您需要使用 `where` 加上一組正規表達式明確的宣告 `/` 是參數值：
 
     Route::get('search/{search}', function ($search) {
         return $search;
     })->where('search', '.*');
 
-> {note} Encoded forward slashes are only supported within the last route segment.
+> {備註} 編碼正斜線 只在路由的最後一段可以使用
 
 <a name="named-routes"></a>
 ## Named Routes
